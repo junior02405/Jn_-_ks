@@ -238,11 +238,76 @@
       if (dataInicioInput) document.getElementById("dataInicio").value = dataInicioInput;
 
       if (dataInicioInput) dataInicio = new Date(dataInicioInput + "T00:00:00");
+    }
+      // Função para salvar as imagens e a música no localStorage
+function salvarDados() {
+  const nome = document.getElementById("nome").value;
+  const mensagem = document.getElementById("mensagemInput").value;
+  const dataInicioInput = document.getElementById("dataInicio").value;
 
-      atualizarPagina();
+  // Salvar no localStorage
+  localStorage.setItem("nome", nome);
+  localStorage.setItem("mensagem", mensagem);
+  localStorage.setItem("dataInicio", dataInicioInput);
+
+  // Salvar imagens em base64
+  const imagens = document.getElementById("imagemInput").files;
+  const imagensBase64 = [];
+  for (let i = 0; i < imagens.length; i++) {
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      imagensBase64.push(e.target.result); // Armazenar como base64
+      localStorage.setItem("imagens", JSON.stringify(imagensBase64));
     };
+    reader.readAsDataURL(imagens[i]);
+  }
 
-    setInterval(atualizarContador, 1000);  // Atualiza o contador a cada segundo
+  // Salvar música
+  const musicaArquivo = document.getElementById("musicaInput").files[0];
+  if (musicaArquivo) {
+    const musicaURL = URL.createObjectURL(musicaArquivo);  // Criar URL temporária
+    localStorage.setItem("musica", musicaURL);
+  }
+}
+
+// Função para carregar os dados salvos
+window.onload = function () {
+  const nome = localStorage.getItem("nome");
+  const mensagem = localStorage.getItem("mensagem");
+  const dataInicioInput = localStorage.getItem("dataInicio");
+
+  // Carregar os dados salvos no localStorage
+  if (nome) document.getElementById("nome").value = nome;
+  if (mensagem) document.getElementById("mensagemInput").value = mensagem;
+  if (dataInicioInput) document.getElementById("dataInicio").value = dataInicioInput;
+
+  if (dataInicioInput) dataInicio = new Date(dataInicioInput + "T00:00:00");
+
+  // Carregar imagens salvas
+  const imagensBase64 = JSON.parse(localStorage.getItem("imagens"));
+  if (imagensBase64) {
+    const gallery = document.getElementById("gallery");
+    gallery.innerHTML = "";  // Limpa a galeria antes de adicionar as novas imagens
+    imagensBase64.forEach((imgBase64) => {
+      const img = document.createElement("img");
+      img.src = imgBase64;
+      gallery.appendChild(img);
+    });
+  }
+
+  // Carregar a música salva
+  const musicaURL = localStorage.getItem("musica");
+  if (musicaURL) {
+    const audioSource = document.getElementById("audioSource");
+    audioSource.src = musicaURL;
+    document.getElementById("audio").load();
+    document.getElementById("audio").play();
+  }
+
+  atualizarPagina();  // Atualiza a página com os dados salvos
+};
+
+setInterval(atualizarContador, 1000);  // Atualiza o contador a cada segundo
   </script>
 </body>
 </html>
