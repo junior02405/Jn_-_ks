@@ -94,7 +94,7 @@
       margin-top: 20px;
       width: 150px;
       height: 150px;
-      display: none; /* Inicialmente oculto */
+      display: none; /* Ocultar inicialmente */
       margin-left: auto;
       margin-right: auto;
       margin-bottom: 20px;
@@ -117,7 +117,7 @@
   </style>
 </head>
 <body>
-  <audio id="audio">
+  <audio id="audio" autoplay>
     <source id="audioSource" type="audio/mp3">
     Seu navegador não suporta a reprodução de áudio.
   </audio>
@@ -175,112 +175,53 @@
 
       // Gerar um novo QR code
       new QRCode(qrCodeDiv, urlUnica);
-
+      
       // Exibir o QR Code
       qrCodeDiv.style.display = 'block';  // Torna o QR Code visível
     }
 
-    // Função para salvar os dados no localStorage
-function salvarDados() {
-  const nome = document.getElementById("nome").value;
-  const mensagem = document.getElementById("mensagemInput").value;
-  const dataInicioInput = document.getElementById("dataInicio").value;
+    // Atualizar a página com as informações do casal
+    function atualizarPagina() {
+      const nome = document.getElementById("nome").value;
+      const mensagem = document.getElementById("mensagemInput").value;
+      const novaData = document.getElementById("dataInicio").value;
+      const imagens = document.getElementById("imagemInput").files;
+      const musicaArquivo = document.getElementById("musicaInput").files[0];
 
-  // Salvar no localStorage
-  localStorage.setItem("nome", nome);
-  localStorage.setItem("mensagem", mensagem);
-  localStorage.setItem("dataInicio", dataInicioInput);
+      // Atualizar o título e a mensagem
+      if (nome) document.getElementById("titulo").innerText = `❤️ ${nome} ❤️`;
+      if (mensagem) document.getElementById("mensagem").innerText = mensagem;
+      if (novaData) dataInicio = new Date(novaData + "T00:00:00");
 
-  // Salvar imagens em base64
-  const imagens = document.getElementById("imagemInput").files;
-  const imagensBase64 = [];
-  for (let i = 0; i < imagens.length; i++) {
-    const reader = new FileReader();
-    reader.onload = function (e) {
-      imagensBase64.push(e.target.result); // Armazenar como base64
-      localStorage.setItem("imagens", JSON.stringify(imagensBase64));
-    };
-    reader.readAsDataURL(imagens[i]);
-  }
+      // Atualizar a galeria de imagens
+      const gallery = document.getElementById("gallery");
+      gallery.innerHTML = "";
+      for (let i = 0; i < imagens.length; i++) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          const img = document.createElement("img");
+          img.src = e.target.result;
+          gallery.appendChild(img);
+        };
+        reader.readAsDataURL(imagens[i]);
+      }
 
-  // Salvar música
-  const musicaArquivo = document.getElementById("musicaInput").files[0];
-  if (musicaArquivo) {
-    const musicaURL = URL.createObjectURL(musicaArquivo);  // Criar URL temporária
-    localStorage.setItem("musica", musicaURL);
-  }
-}
+      // Atualizar o áudio
+      if (musicaArquivo) {
+        const audioSource = document.getElementById("audioSource");
+        audioSource.src = URL.createObjectURL(musicaArquivo);
+        document.getElementById("audio").load();
+        document.getElementById("audio").play();
+      }
 
-// Função para salvar os dados no localStorage
-function salvarDados() {
-  const nome = document.getElementById("nome").value;
-  const mensagem = document.getElementById("mensagemInput").value;
-  const dataInicioInput = document.getElementById("dataInicio").value;
+      // Gerar o QR code
+      gerarQRCode();
+    }
 
-  // Salvar no localStorage
-  localStorage.setItem("nome", nome);
-  localStorage.setItem("mensagem", mensagem);
-  localStorage.setItem("dataInicio", dataInicioInput);
+    // Atualizar o contador
 
-  // Salvar imagens em base64
-  const imagens = document.getElementById("imagemInput").files;
-  const imagensBase64 = [];
-  for (let i = 0; i < imagens.length; i++) {
-    const reader = new FileReader();
-    reader.onload = function (e) {
-      imagensBase64.push(e.target.result); // Armazenar como base64
-      localStorage.setItem("imagens", JSON.stringify(imagensBase64));
-    };
-    reader.readAsDataURL(imagens[i]);
-  }
-
-  // Salvar música
-  const musicaArquivo = document.getElementById("musicaInput").files[0];
-  if (musicaArquivo) {
-    const musicaURL = URL.createObjectURL(musicaArquivo);  // Criar URL temporária
-    localStorage.setItem("musica", musicaURL);
-  }
-}
-
-// Função para carregar os dados salvos no localStorage
-window.onload = function () {
-  const nome = localStorage.getItem("nome");
-  const mensagem = localStorage.getItem("mensagem");
-  const dataInicioInput = localStorage.getItem("dataInicio");
-
-  // Carregar os dados salvos no localStorage
-  if (nome) document.getElementById("nome").value = nome;
-  if (mensagem) document.getElementById("mensagemInput").value = mensagem;
-  if (dataInicioInput) document.getElementById("dataInicio").value = dataInicioInput;
-
-  // Carregar a data de início
-  if (dataInicioInput) dataInicio = new Date(dataInicioInput + "T00:00:00");
-
-  // Carregar imagens salvas
-  const imagensBase64 = JSON.parse(localStorage.getItem("imagens"));
-  if (imagensBase64) {
-    const gallery = document.getElementById("gallery");
-    gallery.innerHTML = "";  // Limpa a galeria antes de adicionar as novas imagens
-    imagensBase64.forEach((imgBase64) => {
-      const img = document.createElement("img");
-      img.src = imgBase64;
-      gallery.appendChild(img);
-    });
-  }
-
-  // Carregar a música salva
-  const musicaURL = localStorage.getItem("musica");
-  if (musicaURL) {
-    const audioSource = document.getElementById("audioSource");
-    audioSource.src = musicaURL;
-    document.getElementById("audio").load();
-    document.getElementById("audio").play();  // Reproduzir a música automaticamente
-  }
-
-  atualizarPagina();  // Atualiza a página com os dados salvos
-};
-
-setInterval(atualizarContador, 1000);  // Atualiza o contador a cada segundo
+    // Atualizar o contador a cada segundo
+    setInterval(atualizarContador, 1000);
   </script>
 </body>
 </html>
