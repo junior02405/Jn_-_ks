@@ -9,7 +9,7 @@
       font-family: Arial, sans-serif;
       margin: 0;
       padding: 0;
-      background-color: #181818; /* Fundo escuro */
+      background-color: #181818;
       color: #ffffff;
       display: flex;
       flex-direction: column;
@@ -20,7 +20,7 @@
     .container {
       max-width: 500px;
       text-align: center;
-      background-color: #202020; /* Fundo do container */
+      background-color: #202020;
       padding: 20px;
       margin-top: 20px;
       border-radius: 10px;
@@ -29,16 +29,8 @@
     }
 
     h1 {
-      color: #ff5370; /* Vermelho vibrante */
+      color: #ff5370;
       animation: fadeIn 1s ease-out;
-    }
-
-    .imagem img {
-      width: 100%;
-      border-radius: 8px;
-      margin: 10px 0;
-      opacity: 0;
-      animation: fadeInImage 0.8s forwards;
     }
 
     .gallery {
@@ -58,11 +50,6 @@
       animation: fadeInImage 0.8s forwards;
     }
 
-    .form {
-      margin-top: 20px;
-      animation: fadeIn 2s ease-out;
-    }
-
     .form input, .form textarea, .form button {
       width: 100%;
       margin: 10px 0;
@@ -73,111 +60,83 @@
     }
 
     .form input, .form textarea {
-      background-color: #2a2a2a; /* Fundo escuro para os inputs */
+      background-color: #2a2a2a;
       color: #ffffff;
     }
 
     .form button {
-      background-color: #ff5370; /* Vermelho vibrante */
+      background-color: #ff5370;
       color: #ffffff;
       cursor: pointer;
       transition: background-color 0.3s ease;
     }
 
     .form button:hover {
-      background-color: #e1465d; /* Vermelho mais escuro */
+      background-color: #e1465d;
     }
 
-    /* Animações */
-    @keyframes fadeIn {
-      0% {
-        opacity: 0;
-      }
-      100% {
-        opacity: 1;
-      }
-    }
-
-    @keyframes fadeInImage {
-      0% {
-        opacity: 0;
-        transform: scale(0.8);
-      }
-      100% {
-        opacity: 1;
-        transform: scale(1);
-      }
-    }
-
-    @keyframes slideUp {
-      0% {
-        transform: translateY(20px);
-        opacity: 0;
-      }
-      100% {
-        transform: translateY(0);
-        opacity: 1;
-      }
-    }
-
-    /* Estilo do contador */
     #contador {
       font-size: 1.5rem;
-      color: #ff5370; /* Vermelho vibrante */
+      color: #ff5370;
       font-weight: bold;
       margin-bottom: 20px;
       text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
-      animation: fadeIn 1.5s ease-out;
     }
 
-    /* Estilo da mensagem */
     #mensagem {
       font-size: 1.5rem;
-      color: #ffa6c9; /* Rosa claro */
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: #ffa6c9;
       font-weight: bold;
       text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
-      animation: fadeIn 2s ease-out;
     }
 
-    /* Estilo do QR Code */
     #qrCode {
       margin-top: 20px;
       width: 150px;
       height: 150px;
     }
+
+    @keyframes fadeIn {
+      0% { opacity: 0; }
+      100% { opacity: 1; }
+    }
+
+    @keyframes fadeInImage {
+      0% { opacity: 0; transform: scale(0.8); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+
+    @keyframes slideUp {
+      0% { transform: translateY(20px); opacity: 0; }
+      100% { transform: translateY(0); opacity: 1; }
+    }
   </style>
 </head>
 <body>
-  
   <audio id="audio" autoplay>
-  <source id="audioSource" type="audio/mp3">
-  Seu navegador não suporta a reprodução de áudio.
-</audio>
-  
+    <source id="audioSource" type="audio/mp3">
+    Seu navegador não suporta a reprodução de áudio.
+  </audio>
+
   <div class="container">
     <h1 id="titulo">❤️ Junior & Kassiele ❤️</h1>
     <div id="contador">Carregando contador...</div>
-    <div id="mensagem"> Eu Te amo Minha Esposa ♥️🔐📝</div>
+    <div id="mensagem">Eu Te amo Minha Esposa ♥️🔐📝</div>
     <div class="gallery" id="gallery"></div>
-
-    <!-- QR Code -->
     <div id="qrCode"></div>
 
     <form class="form">
-      <input type="text" id="nome" placeholder="Digite o nome do casal (Ex: Junior & Kassiele)" />
+      <input type="text" id="nome" placeholder="Digite o nome do casal (Ex: Junior & Kassiele)">
       <textarea id="mensagemInput" placeholder="Digite sua mensagem de amor (Ex: Te amo)"></textarea>
-      <input type="date" id="dataInicio" />
-      <input type="file" id="imagemInput" accept="image/*" multiple />
-      <input type="file" id="musicaInput" accept="audio/*" />
-      <button type="button" onclick="criar()">Criar</button>
+      <input type="date" id="dataInicio">
+      <input type="file" id="imagemInput" accept="image/*" multiple>
+      <input type="file" id="musicaInput" accept="audio/*">
+      <button type="button" onclick="atualizarPagina()">Criar</button>
     </form>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/qrcode@1.4.4/build/qrcode.min.js"></script>
-
   <script>
-    // Data de início padrão
     let dataInicio = new Date("2020-07-17T00:00:00");
 
     function atualizarContador() {
@@ -195,66 +154,54 @@
     }
 
     function gerarQRCode() {
-      const nome = document.getElementById("nome").value || "Junior & Kassiele";
-      const mensagem = document.getElementById("mensagemInput").value || "Te amo";
-      const dataInicioInput = document.getElementById("dataInicio").value || "2024-12-12";
-      
-      // Gerar URL única com as informações
-      const urlUnica = `https://junior02405.github.io/Lovezin/pagina?nome=${encodeURIComponent(nome)}&mensagem=${encodeURIComponent(mensagem)}&dataInicio=${encodeURIComponent(dataInicioInput)}`;
+  const nome = document.getElementById("nome").value || "Junior & Kassiele";
+  const mensagem = document.getElementById("mensagemInput").value || "Te amo";
+  const dataInicioInput = document.getElementById("dataInicio").value || "2020-07-17";
 
-      // Gerar o QR Code
-      new QRCode(document.getElementById("qrCode"), urlUnica);
-    }
+  const urlUnica = `https://junior02405.github.io/Lovezin/pagina?nome=${encodeURIComponent(nome)}&mensagem=${encodeURIComponent(mensagem)}&dataInicio=${encodeURIComponent(dataInicioInput)}`;
+
+  // Limpa o QRCode anterior
+  const qrCodeContainer = document.getElementById("qrCode");
+  qrCodeContainer.innerHTML = "";
+
+  // Gera o novo QRCode
+  new QRCode(qrCodeContainer, urlUnica);
+}
 
     function atualizarPagina() {
-  // Atualizar o título com o nome do casal
-  const nome = document.getElementById("nome").value;
-  if (nome) {
-    document.getElementById("titulo").innerText = `❤️ ${nome} ❤️`;
-  }
+      const nome = document.getElementById("nome").value;
+      const mensagem = document.getElementById("mensagemInput").value;
+      const novaData = document.getElementById("dataInicio").value;
+      const imagens = document.getElementById("imagemInput").files;
+      const musicaArquivo = document.getElementById("musicaInput").files[0];
 
-  // Atualizar a mensagem
-  const mensagem = document.getElementById("mensagemInput").value;
-  if (mensagem) {
-    document.getElementById("mensagem").innerText = mensagem;
-  }
+      if (nome) document.getElementById("titulo").innerText = `❤️ ${nome} ❤️`;
+      if (mensagem) document.getElementById("mensagem").innerText = mensagem;
+      if (novaData) dataInicio = new Date(novaData + "T00:00:00");
 
-  // Atualizar a data de início
-  const novaData = document.getElementById("dataInicio").value;
-  if (novaData) {
-    dataInicio = new Date(novaData + "T00:00:00");
-  }
+      const gallery = document.getElementById("gallery");
+      gallery.innerHTML = "";
+      for (let i = 0; i < imagens.length; i++) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          const img = document.createElement("img");
+          img.src = e.target.result;
+          gallery.appendChild(img);
+        };
+        reader.readAsDataURL(imagens[i]);
+      }
 
-  // Atualizar as imagens selecionadas
-  const gallery = document.getElementById("gallery");
-  gallery.innerHTML = "";
-  const imagens = document.getElementById("imagemInput").files;
-  if (imagens.length > 0) {
-    for (let i = 0; i < imagens.length; i++) {
-      const reader = new FileReader();
-      reader.onload = function (e) {
-        const img = document.createElement("img");
-        img.src = e.target.result;
-        gallery.appendChild(img);
-      };
-      reader.readAsDataURL(imagens[i]);
+      if (musicaArquivo) {
+        const audioSource = document.getElementById("audioSource");
+        audioSource.src = URL.createObjectURL(musicaArquivo);
+        document.getElementById("audio").load();
+        document.getElementById("audio").play();
+      }
+
+      gerarQRCode();
     }
-  }
-
-  // Atualizar a música selecionada
-  const musicaInput = document.getElementById("musicaInput");
-  const musicaArquivo = musicaInput.files[0];
-  if (musicaArquivo) {
-    const audioSource = document.getElementById("audioSource");
-    audioSource.src = URL.createObjectURL(musicaArquivo);
-    const audio = document.getElementById("audio");
-    audio.load();  // Carrega o novo arquivo
-    audio.play();  // Toca a música automaticamente
-  }
-
-  // Gerar o QR Code automaticamente com os dados inseridos
-  gerarQRCode();
-}
 
     setInterval(atualizarContador, 1000);
   </script>
+</body>
+</html>
