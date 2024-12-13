@@ -94,6 +94,10 @@
       margin-top: 20px;
       width: 150px;
       height: 150px;
+      display: none; /* Inicialmente oculto */
+      margin-left: auto;
+      margin-right: auto;
+      margin-bottom: 20px;
     }
 
     @keyframes fadeIn {
@@ -123,6 +127,8 @@
     <div id="contador">Carregando contador...</div>
     <div id="mensagem">Eu Te amo Minha Esposa ♥️🔐📝</div>
     <div class="gallery" id="gallery"></div>
+
+    <!-- O QR Code será gerado e exibido aqui -->
     <div id="qrCode"></div>
 
     <form class="form">
@@ -139,6 +145,7 @@
   <script>
     let dataInicio = new Date("2020-07-17T00:00:00");
 
+    // Atualizar o contador
     function atualizarContador() {
       const agora = new Date();
       const diferença = agora - dataInicio;
@@ -153,21 +160,38 @@
         `Juntos há: ${anos} anos, ${dias} dias, ${horas} horas, ${minutos} minutos e ${segundos} segundos`;
     }
 
+    // Função para gerar o QR Code
     function gerarQRCode() {
-  const nome = document.getElementById("nome").value || "Junior & Kassiele";
-  const mensagem = document.getElementById("mensagemInput").value || "Te amo";
-  const dataInicioInput = document.getElementById("dataInicio").value || "2020-07-17";
+      const nome = document.getElementById("nome").value || "Junior & Kassiele";
+      const mensagem = document.getElementById("mensagemInput").value || "Te amo";
+      const dataInicioInput = document.getElementById("dataInicio").value || "2020-07-17";
 
-  const urlUnica = `https://junior02405.github.io/Lovezin/pagina?nome=${encodeURIComponent(nome)}&mensagem=${encodeURIComponent(mensagem)}&dataInicio=${encodeURIComponent(dataInicioInput)}`;
+      // URL fixa adicionada
+      const urlUnica = `https://junior02405.github.io/Jn_-_ks/?nome=${encodeURIComponent(nome)}&mensagem=${encodeURIComponent(mensagem)}&dataInicio=${encodeURIComponent(dataInicioInput)}`;
+      
+      // Limpar o QR code anterior
+      const qrCodeDiv = document.getElementById("qrCode");
+      qrCodeDiv.innerHTML = "";
 
-  // Limpa o QRCode anterior
-  const qrCodeContainer = document.getElementById("qrCode");
-  qrCodeContainer.innerHTML = "";
+      // Gerar um novo QR code
+      new QRCode(qrCodeDiv, urlUnica);
 
-  // Gera o novo QRCode
-  new QRCode(qrCodeContainer, urlUnica);
-}
+      // Exibir o QR Code
+      qrCodeDiv.style.display = 'block';  // Torna o QR Code visível
+    }
 
+    // Função para salvar os dados no localStorage
+    function salvarDados() {
+      const nome = document.getElementById("nome").value;
+      const mensagem = document.getElementById("mensagemInput").value;
+      const dataInicioInput = document.getElementById("dataInicio").value;
+
+      localStorage.setItem("nome", nome);
+      localStorage.setItem("mensagem", mensagem);
+      localStorage.setItem("dataInicio", dataInicioInput);
+    }
+
+    // Função para atualizar os dados da página
     function atualizarPagina() {
       const nome = document.getElementById("nome").value;
       const mensagem = document.getElementById("mensagemInput").value;
@@ -178,6 +202,8 @@
       if (nome) document.getElementById("titulo").innerText = `❤️ ${nome} ❤️`;
       if (mensagem) document.getElementById("mensagem").innerText = mensagem;
       if (novaData) dataInicio = new Date(novaData + "T00:00:00");
+
+      salvarDados();  // Salva os dados no localStorage
 
       const gallery = document.getElementById("gallery");
       gallery.innerHTML = "";
@@ -201,7 +227,22 @@
       gerarQRCode();
     }
 
-    setInterval(atualizarContador, 1000);
+    // Função para carregar os dados salvos no localStorage ao carregar a página
+    window.onload = function() {
+      const nome = localStorage.getItem("nome");
+      const mensagem = localStorage.getItem("mensagem");
+      const dataInicioInput = localStorage.getItem("dataInicio");
+
+      if (nome) document.getElementById("nome").value = nome;
+      if (mensagem) document.getElementById("mensagemInput").value = mensagem;
+      if (dataInicioInput) document.getElementById("dataInicio").value = dataInicioInput;
+
+      if (dataInicioInput) dataInicio = new Date(dataInicioInput + "T00:00:00");
+
+      atualizarPagina();
+    };
+
+    setInterval(atualizarContador, 1000);  // Atualiza o contador a cada segundo
   </script>
 </body>
 </html>
